@@ -1,0 +1,19 @@
+﻿{
+    "folders": [
+        {
+            "nbrOfDaysOld": 7,
+            "path": "some_path_here",
+            "recursive": true,
+            "excludeExtensions": [
+                ".png",
+                ".html"
+            ]
+        },
+        {
+            "nbrOfDaysOld": 0,
+            "path": "some_path_here",
+            "recursive": false,
+            "excludeExtensions": []
+        }
+    ]
+}

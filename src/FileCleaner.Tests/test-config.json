@@ -1,0 +1,32 @@
+﻿{
+    "folders": [
+        {
+            "nbrOfDaysOld": 0,
+            "path": "./Folders/Folder1",
+            "recursive": false,
+            "excludeExtensions": []
+        },
+        {
+            "nbrOfDaysOld": 0,
+            "path": "./Folders/Folder2",
+            "recursive": true,
+            "excludeExtensions": []
+        },
+        {
+            "nbrOfDaysOld": 0,
+            "path": "./Folders/Folder3",
+            "recursive": true,
+            "excludeExtensions": [
+                ".html"
+            ]
+        },
+        {
+            "nbrOfDaysOld": 1,
+            "path": "./Folders/Folder4",
+            "recursive": true,
+            "excludeExtensions": [
+                ".html"
+            ]
+        }
+    ]
+}
