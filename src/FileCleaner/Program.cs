@@ -119,6 +119,7 @@ namespace FileCleaner
             }
 
             var maxNbrOfTasks = Environment.ProcessorCount*2;
+            maxNbrOfTasks = config.MaxThreadCount < maxNbrOfTasks ? maxNbrOfTasks : config.MaxThreadCount;
             var partions = Partition(config.Folders, maxNbrOfTasks).ToList();
 
             Task.WaitAll(partions.Select(CleanFolderPartsAsync).ToArray());

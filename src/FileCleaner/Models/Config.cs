@@ -8,6 +8,7 @@ namespace FileCleaner.Models
 {
     public class Config
     {
+        public int MaxThreadCount { get; set; }
         public List<FolderConfig> Folders { get; set; }
     }
 }

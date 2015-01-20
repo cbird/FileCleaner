@@ -1,4 +1,5 @@
 ﻿{
+    "maxThreadCount": 4,
     "folders": [
         {
             "nbrOfDaysOld": 7,
