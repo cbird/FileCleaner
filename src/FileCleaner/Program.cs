@@ -109,6 +109,34 @@ namespace FileCleaner
             }
         }
 
+        public static bool IsBlacklisted(string path)
+        {
+            var isBlacklisted = false;
+            var parsedPath = path.Replace("/", "\\").ToLower();
+            parsedPath = parsedPath.EndsWith("\\") ? parsedPath.Substring(0, parsedPath.Length - 1) : parsedPath;
+            var arr = parsedPath.Split('\\');
+
+            if (arr.Length == 1)
+            {
+                isBlacklisted = true;
+            }
+            else if (arr[arr.Length-1].Equals("inetpub"))
+            {
+                isBlacklisted = true;
+            }
+            else if (arr[1].Equals("windows") || arr[1].Contains("program") || arr[1].Equals("users"))
+            {
+                isBlacklisted = true;
+            }
+
+            if (isBlacklisted)
+            {
+                Log.WarnFormat("The following folder cannot be cleaned {0}", path);
+            }
+
+            return isBlacklisted;
+        }
+
         public static void CleanFolders(Config config)
         {
             Log.Info("Starting cleanup...");
@@ -137,6 +165,9 @@ namespace FileCleaner
 
         private static async Task<bool> CleanFolderAsync(FolderConfig config)
         {
+            if (IsBlacklisted(config.Path))
+                return false;
+
             var result = true;
 
             try
