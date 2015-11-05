@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using FileCleaner.Models;
 using log4net;
+using log4net.Appender;
+using log4net.Repository.Hierarchy;
 using Newtonsoft.Json;
 
 namespace FileCleaner
@@ -13,12 +15,22 @@ namespace FileCleaner
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof (Program));
 
+        private static string GetLogDirectoryPath()
+        {
+            var rootAppender = ((Hierarchy) LogManager.GetRepository())
+                .Root.Appenders.OfType<FileAppender>()
+                .FirstOrDefault();
+
+            return rootAppender != null ? Path.GetDirectoryName(rootAppender.File) : null;
+        }
+
         private static void Main(string[] args)
         {
             try
             {
                 Log.Info("Starting program...");
                 string configPath = null;
+                var logDirPath = GetLogDirectoryPath();
 
                 try
                 {
@@ -40,15 +52,22 @@ namespace FileCleaner
 
                 CleanFolders(config);
 
-                Log.Info("Removing old log files...");
-                Task.WaitAll(CleanFolderAsync(new FolderConfig
+                if (!string.IsNullOrEmpty(logDirPath))
                 {
-                    ExcludeExtensions = new List<string>(),
-                    NbrOfDaysOld = 7,
-                    Recursive = true,
-                    Path = "./logs"
-                }));
-                Log.Info("Old log files removed!");
+                    Log.Info("Removing old log files...");
+                    Task.WaitAll(CleanFolderAsync(new FolderConfig
+                    {
+                        ExcludeExtensions = new List<string>(),
+                        NbrOfDaysOld = 7,
+                        Recursive = true,
+                        Path = logDirPath
+                    }));
+                    Log.Info("Old log files removed!");
+                }
+                else
+                {
+                    Log.Warn("Could not find any log directory for FileCleaner, hence no logs were cleaned!");
+                }
 
                 Log.Info("Exiting program...");
             }
