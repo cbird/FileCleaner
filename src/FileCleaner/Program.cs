@@ -187,6 +187,7 @@ namespace FileCleaner
             if (IsBlacklisted(config.Path))
                 return false;
 
+            var checkAgainstTimeUtc = DateTime.UtcNow.AddDays(-config.NbrOfDaysOld);
             var result = true;
 
             try
@@ -201,9 +202,11 @@ namespace FileCleaner
                 for (var i = 0; i < files.Count(); ++i)
                 {
                     var info = new FileInfo(files[i]);
+                    var excludedExtension = config.ExcludeExtensions.Contains(info.Extension.ToLower());
 
-                    if (info.CreationTimeUtc < DateTime.UtcNow.AddDays(-config.NbrOfDaysOld) && !config.ExcludeExtensions.Contains(info.Extension.ToLower()))
+                    if (info.LastWriteTimeUtc < checkAgainstTimeUtc && !excludedExtension)
                     {
+                        Log.DebugFormat("About to delete file {0} with LastWriteTimeUtc: {1} and checkAgainstTimeUtc: {2}", files[i], info.LastWriteTimeUtc, checkAgainstTimeUtc);
                         File.Delete(files[i]);
                     }
                 }
